@@ -5,12 +5,22 @@ import os
 def download(url):
     ydl_opts = {
         'format': 'm4a/bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'm4a',
-        }],
-        'outtmpl': 'output/%(title)s.%(ext)s', # outputフォルダに保存
+        'writethumbnail': True,  # サムネイルを一時的にダウンロード
+        'postprocessors': [
+            {
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'm4a',
+            },
+            {
+                'key': 'EmbedThumbnail', # サムネイルをファイルに埋め込む設定
+            },
+            {
+                'key': 'FFmpegMetadata',  # タイトルなどのメタデータも追加
+            }
+        ],
+        'outtmpl': 'output/%(title)s.%(ext)s',
     }
+    
     if not os.path.exists('output'):
         os.makedirs('output')
         
@@ -18,5 +28,8 @@ def download(url):
         ydl.download([url])
 
 if __name__ == "__main__":
-    video_url = sys.argv[1]
-    download(video_url)
+    if len(sys.argv) > 1:
+        video_url = sys.argv[1]
+        download(video_url)
+    else:
+        print("URLを指定してください")
