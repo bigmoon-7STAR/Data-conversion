@@ -4,38 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       video_url:
-        description: 'YouTubeのURLを入力してください'
+        description: 'URL'
         required: true
 
-# 権限エラーを防ぐためにここに直接権限を書きます
 permissions:
   contents: write
 
 jobs:
   convert:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # これで警告を消せます
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-       - name: Install dependencies
+      - name: Install
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-          pip install --upgrade yt-dlp  # --upgrade を追加
-
-
-      - name: Download and Convert
+          pip install --upgrade yt-dlp
+      - name: Run
         run: python download.py "${{ github.event.inputs.video_url }}"
-
-      - name: Upload to Release
+      - name: Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "latest"
