@@ -1,0 +1,34 @@
+name: Convert YouTube to M4A
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'YouTubeのURLを入力してください'
+        required: true
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install yt-dlp
+
+      - name: Download and Convert
+        run: python download.py "${{ github.event.inputs.video_url }}"
+
+      - name: Upload M4A
+        uses: actions/upload-artifact@v4
+        with:
+          name: converted-m4a
+          path: output/*.m4a
