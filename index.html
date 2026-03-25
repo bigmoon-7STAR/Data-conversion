@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M4A変換くん</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        input { width: 80%; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>YouTube → M4A 変換</h1>
+    <p>YouTubeのURLを貼ってボタンを押してください</p>
+    <input type="text" id="url" placeholder="https://www.youtube.com/watch?v=...">
+    <br>
+    <button onclick="startConvert()">変換を開始する</button>
+
+    <script>
+        function startConvert() {
+            const url = document.getElementById('url').value;
+            if(!url) { alert('URLを入れてね'); return; }
+            alert('GitHubのActionsタブから実行してください（自動化には別途設定が必要です）');
+            // ここからActionsを自動起動するには「Repository Dispatch」という設定が必要ですが、まずは手動が基本です
+        }
+    </script>
+</body>
+</html>
