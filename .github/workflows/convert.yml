@@ -7,15 +7,21 @@ on:
         description: 'YouTubeのURLを入力してください'
         required: true
 
+# 権限エラーを防ぐためにここに直接権限を書きます
+permissions:
+  contents: write
+
 jobs:
   convert:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # これで警告を消せます
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # 最新版
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # v4からv5に更新（Node警告対策）
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -28,11 +34,10 @@ jobs:
       - name: Download and Convert
         run: python download.py "${{ github.event.inputs.video_url }}"
 
-      # ZIPにせず、ファイルを直接「Release」として公開する設定
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "latest-download"
+          tag_name: "latest"
           files: output/*.m4a
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
